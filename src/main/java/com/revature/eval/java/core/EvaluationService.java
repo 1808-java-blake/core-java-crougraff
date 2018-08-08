@@ -1,6 +1,7 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class EvaluationService {
 		}
 
 		public Triangle(double sideOne, double sideTwo, double sideThree) {
-			this();
+			this();//calls the empty constructor above
 			this.sideOne = sideOne;
 			this.sideTwo = sideTwo;
 			this.sideThree = sideThree;
@@ -91,16 +92,29 @@ public class EvaluationService {
 
 		public boolean isEquilateral() {
 			// TODO Write an implementation for this method declaration
+			if(sideOne == sideTwo && sideThree == sideTwo) {
+				return true;
+			}
 			return false;
 		}
 
 		public boolean isIsosceles() {
 			// TODO Write an implementation for this method declaration
+			if(sideOne == sideTwo) {
+				return true;
+			}else if (sideOne == sideThree) {
+				return true;
+			}else if (sideTwo == sideThree) {
+				return true;
+			}
 			return false;
 		}
 
 		public boolean isScalene() {
 			// TODO Write an implementation for this method declaration
+			if(sideOne != sideTwo && sideTwo != sideThree && sideOne != sideThree) {
+				return true;
+			}
 			return false;
 		}
 
@@ -122,8 +136,27 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		// TODO Write an implementation for this method declaratio
+		int score = 0;
+		String s = string.toUpperCase();
+		for(char c : s.toCharArray()) {
+			if(c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U' || c == 'L' || c == 'N' || c == 'R' || c == 'S' || c == 'T') {
+				score += 1;
+			}else if (c == 'D' || c == 'G') {
+				score += 2;
+			}else if (c == 'B' || c == 'C' || c == 'M' || c == 'P') {
+				score += 3;
+			}else if (c == 'F' || c == 'H' || c == 'V' || c == 'W' || c == 'Y') {
+				score += 4;
+			}else if(c == 'K') {
+				score += 5;
+			}else if (c == 'J' || c == 'X') {
+				score += 8;
+			}else if(c == 'Q' || c == 'Z') {
+				score += 10;
+			}
+		}
+		return score;
 	}
 
 	/**
@@ -158,8 +191,22 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		StringBuilder sbBuilder = new StringBuilder();
+		for(int i = 0; i < string.length(); i++) {
+			char c = string.charAt(i);
+			if(c == '(' || c == '+' || c == ')' || c == '-' || c == '.' || c == ' ') {
+				continue;
+			}else if(c >= 48 && c <= 57) {
+				sbBuilder.append(c);
+			}else {
+				throw new IllegalArgumentException();
+			}
+		}
+		String number = sbBuilder.toString();
+		if(number.length() > 11) {
+			throw new IllegalArgumentException();
+		}
+		return number;
 	}
 
 	/**
@@ -172,8 +219,26 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		HashMap<String, Integer> count = new HashMap<>();
+		//String s = string.trim();
+		String s = string;
+		s = s + ' ';
+		s = s.replace("\n", "");
+		int index = -1;
+		//System.out.println(s);
+		for(int i = 0; i < s.length();i++) {
+			if(s.charAt(i) == ' ' || s.charAt(i) == ',') {
+				String key = s.substring(++index, i);
+				if(count.containsKey(key)) {
+					count.put(key, count.get(key) + 1);
+				}else {
+					count.put(key, 1);
+				}
+				index = i++;
+			}
+		}
+		
+		return count;
 	}
 
 	/**

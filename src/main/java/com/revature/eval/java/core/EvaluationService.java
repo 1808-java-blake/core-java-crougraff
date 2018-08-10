@@ -1,9 +1,18 @@
 package com.revature.eval.java.core;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class EvaluationService {
 
@@ -31,7 +40,6 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
 		String acronym = phrase.substring(0, 1);
 		for (int i = 0; i < phrase.length(); i++) {
 			if (phrase.charAt(i) == ' ' || phrase.charAt(i) == '-') {
@@ -317,8 +325,47 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		List<String> words = new ArrayList<>();
+		String output = "";
+		string = string + " ";
+		int index = 0;
+		for(int i = 0; i < string.length(); i++) {
+			if(string.charAt(i) == ' ') {
+				words.add(new String(string.substring(index, i)));
+				index = ++i;
+			}
+		}
+		System.out.println("lsb: "+ words);
+		for(String word: words) {
+			char c = word.charAt(0);
+				if( c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+					output += word.concat("ay");
+				}else {
+					String currentWord = new String(word);
+					int in = 0;
+					for(int i = 0; i < currentWord.length(); i++) {
+						c = currentWord.charAt(i);
+						System.out.println("c: "+ c);
+						if(c != 'a' && c != 'e' && c != 'i' && c != 'o' && c != 'u') {
+							if(c == 'q') {
+								word = word + c + 'u';
+								i++;
+							}else {
+								word = word + c;
+							}
+						}else {
+							word = word.substring(i, word.length());
+							output += word.concat("ay");
+							break;
+						}
+					}
+				}
+				if(words.size() > 1 && words.indexOf(word) < words.size()) {
+					output += " ";
+				}
+		}
+		output = output.trim();
+		return output;
 	}
 
 	/**
@@ -337,7 +384,16 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
+		int sum = 0;
+		String inputStr = Integer.toString(input);
+		int length = inputStr.length();
+		for(int i = 0; i < inputStr.length(); i++) {
+			sum += Math.pow(Character.getNumericValue(inputStr.charAt(i)), length);
+		}
+		if(sum == input) {
+			System.out.println("true");
+			return true;
+		}
 		return false;
 	}
 
@@ -352,10 +408,52 @@ public class EvaluationService {
 	 * @return
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		List<Long> primeFactors = new ArrayList<>();
+        while (l%2==0){ // divide l by 2 until it no long goes into it evenly
+            primeFactors.add(2l);
+            l /= 2;
+        }
+        for (int i = 3; i <= Math.sqrt(l); i++){
+            while (l%i == 0){
+                primeFactors.add((long) i);
+                l /= i;
+            }
+            i++; //increment twice
+        }
+        if (l > 2)
+            primeFactors.add(l);
+		return primeFactors;
 	}
-
+//		// TODO Write an implementation for this method declaration
+//		List<Long> primeFactors = new ArrayList<>();
+//		if (l == 2l) {
+//			primeFactors.add(2l);
+//		}
+//		for(int i = 2; i < l/2; i++) {
+//			double result = l/i;
+//			if (result - Math.floor(result) == 0){
+//				System.out.println(result + " is a whole number.");
+//				if (isPrime(i)) {
+//					primeFactors.add((long) i);
+//				}
+//				if(isPrime((long)result)) {
+//					primeFactors.add((long) result);
+//				}
+//			}
+//		}
+//		return primeFactors;
+//	}
+//	public boolean isPrime(long num) {
+//		if(num == 2) {
+//			return true;
+//		}
+//		for(int i = 2; i <= num/2; ++i){
+//	            if(num % i == 0){
+//	                return false;
+//	            }
+//	        }
+//		 return true;
+//	}
 	/**
 	 * 11. Create an implementation of the rotational cipher, also sometimes called
 	 * the Caesar cipher.
@@ -391,8 +489,26 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			char [] str = string.toCharArray();
+			for(int i = 0; i < string.length(); i++) {
+				if(str[i] >= 97 && str[i] <= 122) {
+					int temp =  (str[i] + key);
+					if(temp > 122) {
+						str[i] = (char) (96 + (temp - 122));
+					}else {
+						str[i] += key;
+					}
+				}else if(str[i] >= 65 && str[i] <= 90) {
+					int temp =  (str[i] + key);
+					if(temp > 90) {
+						str[i] = (char) (64 + (temp - 90));
+					}else {
+						str[i] += key;
+					}
+				}
+			}
+			String s = String.valueOf(str);
+			return s;
 		}
 
 	}
@@ -409,9 +525,26 @@ public class EvaluationService {
 	 * @param i
 	 * @return
 	 */
-	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+	public int calculateNthPrime(int n) {
+		if(n == 0) {
+			throw new IllegalArgumentException();
+		}
+		   ArrayList<Integer> primes = new ArrayList<>();
+		    primes.add(2);
+		    for (int i = 3; primes.size() != n; i+=2) { 
+		        boolean isPrime = true;
+		        for (Integer prime : primes) { 
+		            if (i % prime == 0) {
+		                isPrime = false;
+		                break; 
+		            }
+		        }
+		        if (isPrime) {
+		            primes.add(i);
+		        }
+		    }
+		    System.out.println("prime Numbers" + primes);
+		    return primes.get(n-1);
 	}
 
 	/**
@@ -447,8 +580,25 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			string = string.toLowerCase();
+			string = string.replaceAll("[^a-zA-Z0-9]", "");
+			System.out.println(string);
+			StringBuilder addSpaces = new StringBuilder();
+			for (int i = 0; i < string.length(); i++) {
+			   if (i % 5 == 0 && i != 0) {
+			      addSpaces.append(" ");
+			    }
+			   addSpaces.append(string.charAt(i));
+			}
+			string = addSpaces.toString();
+			char [] str = string.toCharArray();
+			for(int i = 0; i < string.length(); i++) {
+				if(str[i] >= 97 && str[i] <= 122) {
+					str[i] = (char) (122 - (str[i] - 97));
+				}
+			}
+			String s = String.valueOf(str);
+			return s;
 		}
 
 		/**
@@ -458,8 +608,16 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+				string = string.replaceAll("\\s+","");
+				System.out.println(string);
+				char [] str = string.toCharArray();
+				for(int i = 0; i < string.length(); i++) {
+					if(str[i] >= 97 && str[i] <= 122) {
+						str[i] = (char) (122 - (str[i] - 97));
+					}
+				}
+				String s = String.valueOf(str);
+				return s;
 		}
 	}
 
@@ -486,7 +644,25 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
+		string = string.replace('-', ' ');
+		string = string.replaceAll("\\s+","");
+		char [] str = string.toCharArray();
+		int result = 0;
+		int multipler = 10;
+		for(int i = 0; i < string.length(); i++) {
+			if(str[i] >= 48 && str[i] <= 57 || str[i] == 88) {
+				if(str[i] == 88) {
+					result += 10;
+				}else {
+					result += Integer.parseInt(String.valueOf(str[i])) * multipler--;
+				}
+			}else {
+				return false;
+			}
+		}
+		if(result % 11 == 0) {
+			return true;
+		}
 		return false;
 	}
 
@@ -504,7 +680,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
+		string = string.toLowerCase();
+		string = string.replace(" ", "");
+		char [] str = string.toCharArray();
+		Arrays.sort(str);
+		Set<Character> s = new TreeSet<>();
+		for(char c : str) {
+			if(c < 97 || c > 122) {
+				return false;
+			}else {
+				s.add(c);
+			}
+		}
+		if(s.size() == 26) {
+			return true;
+		}
 		return false;
 	}
 
@@ -517,9 +707,15 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
-	}
+        //In case,time not included
+        if(given instanceof LocalDate) {
+            LocalDateTime time = LocalDateTime.of((LocalDate) given, LocalTime.MIN);
+            return time.plus(Duration.ofSeconds(1000000000l));
+        }
+        //if time is included
+        LocalDateTime time = LocalDateTime.from(given);
+        return time.plus(Duration.ofSeconds(1000000000l));
+    }
 
 	/**
 	 * 18. Given a number, find the sum of all the unique multiples of particular
@@ -534,9 +730,22 @@ public class EvaluationService {
 	 * @param set
 	 * @return
 	 */
-	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+	public int getSumOfMultiples(int n, int[] set) {
+		int sum = 0;
+		Set<Integer> setOfMultiples = new TreeSet<>();
+		for(int i = 0; i < set.length; i++) {
+			for(int j = 0; j < n/2; j++) {
+				int multiple = set[i] * j ;
+				if(multiple < n) {
+					setOfMultiples.add(multiple);
+				}else {
+					break;
+				}
+			}
+		}
+		for(int multiple : setOfMultiples)
+			sum += multiple;
+		return sum;
 	}
 
 	/**

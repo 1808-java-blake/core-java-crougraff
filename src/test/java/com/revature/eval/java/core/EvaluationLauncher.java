@@ -1,7 +1,5 @@
 package com.revature.eval.java.core;
 
-import com.revature.eval.java.core.EvaluationService.Triangle;
-
 public class EvaluationLauncher {
 	public static void main(String[] args) {
 		EvaluationService es = new EvaluationService();
@@ -12,6 +10,7 @@ public class EvaluationLauncher {
 //		System.out.println(t.isScalene());
 //		System.out.println(es.getScrabbleScore("f"));
 //		System.out.println(es.cleanPhoneNumber("322395144841"));
-		System.out.println(es.wordCount("one,\ntwo,\nthree"));
+		//System.out.println(es.wordCount("one,\ntwo,\nthree"));
+		es.isArmstrongNumber(9);
 	}
 }

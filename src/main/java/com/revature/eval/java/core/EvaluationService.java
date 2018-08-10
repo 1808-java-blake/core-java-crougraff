@@ -1,5 +1,6 @@
 package com.revature.eval.java.core;
 
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -707,12 +708,10 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-        //In case,time not included
         if(given instanceof LocalDate) {
             LocalDateTime time = LocalDateTime.of((LocalDate) given, LocalTime.MIN);
             return time.plus(Duration.ofSeconds(1000000000l));
         }
-        //if time is included
         LocalDateTime time = LocalDateTime.from(given);
         return time.plus(Duration.ofSeconds(1000000000l));
     }
@@ -785,7 +784,30 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
+		string = string.replaceAll(" ",	"");
+		int result = 0;
+		int index = 1;
+		if(string.length() <= 1) {
+			return false;
+		}
+		char [] str = string.toCharArray();
+		for(int i = string.length()-1; i >= 0 ; i--,index++) {
+			if(str[i] < 48 || str[i] > 57) {
+				return false;
+			}
+			if(index%2 == 0) {
+				int val = Integer.parseInt(String.valueOf(str[i]))*2;
+				if(val > 9) {
+					val -= 9;
+				}
+				result += val;
+			}else {
+				result += Integer.parseInt(String.valueOf(str[i]));
+			}
+		}
+		if(result % 10 == 0) {
+			return true;
+		}
 		return false;
 	}
 
@@ -817,7 +839,43 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
+		string = string.replace('?',	' ');
+		String [] words = string.split(" ");
+		
+		int param1 = 0;
+		int param2 = 0;
+		char op = ' ';
+		for(String word : words) {
+			if(word.charAt(0) <= 57 && word.charAt(0) >= 48 || word.charAt(0) == '-') {
+				System.out.println(word);
+				System.out.println(word.charAt(0));
+				if(param1 == 0) {
+					param1 = Integer.parseInt(word);
+					System.out.println(param1);
+				}else {
+					param2 = Integer.parseInt(word);
+					System.out.println(param2);
+				}
+			}else if("plus".equals(word)) {
+				op = '+';
+			}else if("divided".equals(word)) {
+				op = '/';
+			}else if("multiplied".equals(word)) {
+				op = '*';
+			}else if("minus".equals(word)) {
+				op = '-';
+			}
+		}
+		System.out.println(op);
+		if(op == '+') { 
+			return param1 + param2;
+		}else if(op == '/') {
+			return param1 / param2;
+		}else if(op == '*') {
+			return param1 * param2;
+		}else if (op == '-') {
+			return param1 - param2;
+		}
 		return 0;
 	}
 
